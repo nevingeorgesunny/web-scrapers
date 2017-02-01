@@ -1,0 +1,244 @@
+require 'rubygems'
+require 'mechanize'
+require 'nokogiri'
+require 'open-uri'
+require 'json'
+
+
+
+LOGIN_KEY_VALUE_DEPTH_1 = "thinredline"
+
+LOGIN_URL = "https://www.linkedin.com/uas/login?goback=&trk=hb_signin"
+
+base_page = Nokogiri::HTML(open(LOGIN_URL))
+
+loop_element =nil
+
+login_content = base_page.css('form#login') 
+
+puts login_content
+
+agent = Mechanize.new
+
+login_page = agent.get(LOGIN_URL)
+
+pp login_page
+
+linkedin_login_form = login_page.form('login')
+
+puts "\n\n"
+
+puts linkedin_login_form.fields
+
+linkedin_login_form.session_key = "nevin.george.sunny@gmail.com"
+
+linkedin_login_form.session_password = LOGIN_KEY_VALUE_DEPTH_1
+
+puts "\n\n SUCCESS"
+
+base_page = agent.submit(linkedin_login_form, linkedin_login_form.buttons.first)
+
+puts "\n\n--------------------"
+
+linkedin_search_form = base_page.form
+
+puts linkedin_search_form
+
+
+
+linkedin_search_form.keywords = "HR"
+
+pp base_page.form
+
+base_page = agent.submit(linkedin_search_form, linkedin_search_form.buttons.first)
+
+
+pp base_page.links
+
+
+
+puts "\n\n-----------------------------------------------"
+
+raw_results = base_page.search('div')
+
+raw_results.each do |result|
+
+	result_id = result['id']
+
+	result_class = result['class']
+
+	if result_id == "srp_main_"		
+
+		puts result_id	
+
+		puts "  "
+
+
+		if result_class == nil
+			puts "ertyuioiuytreertyui"
+		end
+		puts result_class	
+	
+		puts "\n\n\n\n   *******************************   NEW LINE **********************************"
+
+		inner_result =  result.at('fmt_name')
+
+		string = result.inner_html
+
+		copy = string.split("")
+
+		number = string.length
+
+		puts number
+
+
+		number = number -1 
+
+		ch = string[number]
+		puts ch
+
+		loop_count_forward = 0
+
+		copy.each do |str|
+
+			if str == '{'
+
+				break
+
+			end
+
+			loop_count_forward = loop_count_forward + 1
+
+			print str
+
+			string.slice!(0)
+
+		end
+
+		puts "\n\n"		
+
+		loop_count_reverse = 0
+
+		copy.reverse.each do |str|
+
+			if str == '}'
+
+				break
+
+			end
+
+			loop_count_reverse = loop_count_reverse + 1
+
+			print str
+
+		end
+
+		puts loop_count_reverse
+
+		loop_count_reverse.times do string.chop! end
+
+		#puts string
+
+		#puts inner_results_depth_1
+
+		File.write('results.txt', string)
+
+		parsed = JSON.parse(string)
+
+		parsed = parsed["person"]
+
+		pp parsed
+
+		copy = string.split("")
+
+		copy.each_with_index { |s,i|
+			element = copy[i]
+			if element == "f"
+			next_element = copy[i+1]
+			if next_element  == "m"
+			next_element_depth_1 = copy[i+2]
+			if next_element_depth_1 == "t"
+			next_element_depth_2 = copy[i+3]
+			if next_element_depth_2 == "_"	
+			next_element_depth_3 = copy[i+4]
+			if next_element_depth_3 == "n"	
+			next_element_depth_4 = copy[i+5]
+			if next_element_depth_4 == "a"	
+			loop_counter = i+5
+			full_name_toggle = 0
+			hit_count = 0
+				while 1 == 1 do
+					loop_counter = loop_counter + 1
+					loop_element = copy[loop_counter]
+						if loop_element == "\""
+							hit_count = hit_count + 1	
+							if full_name_toggle == 1
+								full_name_toggle = 0
+								puts "\n\n"
+								break
+							end
+							if full_name_toggle == 0 &&	
+								hit_count == 2
+								full_name_toggle = 1
+							end
+						end		
+							if full_name_toggle ==1 &&
+								loop_element != "\""
+								print loop_element
+							end
+				end
+			end	
+			end	
+			end	
+			end			
+		 	end
+			end
+		}
+
+
+
+	copy.each_with_index { |s,i|
+
+			index = i
+			index_d2 = index + 1
+			index_d3 = index_d2 + 1	
+			index_d4 = index_d3 + 1	
+			index_d5 = index_d4 + 1		
+			index_d6 = index_d5 + 1	
+			index_d7 = index_d6 + 1	
+			index_d8 = index_d7 + 1	
+			index_d9 = index_d8 + 1			
+
+			if copy[index] == "l" &&
+				copy[index_d2] == "l" &&
+				copy[index_d3] == "i" &&
+				copy[index_d4] == "n" &&
+				copy[index_d5] == "k" &&
+				copy[index_d6] == "_" 
+
+				print "link found"
+			end
+
+		}
+
+
+		
+	end
+
+	if result_id == "srp_main_"
+		#puts result
+	end
+		
+end
+
+
+
+
+
+
+
+
+
+
+
+
